@@ -12,48 +12,10 @@ namespace LBMace
     */
     class Solver
     {
-        /** @brief 시뮬레이션 데이터를 얻기 위해 싱글턴인 data 클래스를 불러옴 */
         Data data;
-        /** @brief 내부 연산을 위한 weighting factor 배열 */
-        private double[] weight;
-        /** @brief D2Q9 Scheme에서 vector set의 x축 배열 */
-        private double[] ex;
-        /** @brief D2Q9 Scheme에서 vector set의 y축 배열 */
-        private double[] ey;
-        /** @brief D2Q9 Scheme에서 각 vector의 반대 방향 vector의 번호를 저장한 배열\n
-        * 이 배열을 이용하면 bounceback 계산 코드가 간단해진다.
-        */
+
+        private double[] weight, ex, ey;
         private int[] opp;
-        /** @brief 각 lattice의 ID를 의미함.\n
-        * index = i + lx * j where lx is the size of width of the simulation domain\n
-        * e.g. the lattice of (0,0) has ID 0, (1,0) has ID 1
-        */
-        private int index;
-        /** @brief 각 lattice의 x 좌표값 */
-        private int i;
-        /** @brief 각 lattice의 y 좌표값 */
-        private int j;
-        /** @brief strain rate tensor S의 S(0,0) 값, Sii */
-        private double sxx;
-        /** @brief strain rate tensor S의 S(0,1) 값, Sij */
-        private double sxy;
-        /** @brief strain rate tensor S의 S(1,0) 값, Sji */
-        private double syx;
-        /** @brief strain rate tensor S의 S(1,1) 값, Sjj */
-        private double syy;
-        /** @brief equilibrium distribution function 값 */
-        private double feq;
-        /** @brief 각 lattice의 속도의 절대값\
-        * usqr = ux*ux + uy*uy */
-        private double usqr;
-        /** @brief 각 distribution function이 갖는 속도 값\n
-        * eu = ex*ux + ey*uy
-        */
-        private double eu;
-        /** @brief Interface Search를 위한 Dictionary\n
-        * strain rate tensor 값이 들어간다.
-        */
-        private Dictionary<int, double> minDic, MaxDic;
 
         public Solver()
         {
@@ -71,10 +33,6 @@ namespace LBMace
 
             /* 시뮬레이션 데이터에 접근 하기 위해 싱글턴 data 클래스를 호출함 */
             data = Data.get();
-
-            /* Interface에서의 Strain rate tensor를 다루기 위한 자료구조 */
-            minDic = new Dictionary<int, double>();
-            MaxDic = new Dictionary<int, double>();
         }
 
         /** @brief Collision step을 계산하는 클래스\n
@@ -109,13 +67,14 @@ namespace LBMace
         public void streaming(double[] input, double[] output, int mode)
         {
             int ax, ay, bx, by;
+            int index, i, j;
 
             for (index = 0; index < data.size[0] * data.size[1]; index++)
             {
                 i = index % data.size[0];
                 j = index / data.size[0];
 
-                if (isWall(mode))
+                if (isWall(mode, index))
                 {
                     for (int n = 0; n < 9; n++)
                     {
@@ -135,7 +94,7 @@ namespace LBMace
         * @param mode map 배열의 값이 input으로 제공된다
         * @return 성공 여부
         */
-        private bool isWall(int mode)
+        private bool isWall(int mode, int index)
         {
             bool output = true;
 
@@ -190,27 +149,29 @@ namespace LBMace
         * 이 경우 경계조건은 inlet과 outlet의 zou and he boundary condition이거나 interpolated boundary condition이다.*/
         public void boundary()
         {
+            int index;
+
             for (index = 0; index < data.size[0] * data.size[1]; index++)
             {
                 switch (data.map[index])
                 {
                     case 2://inlet left
-                        inletLeft();
+                        inletLeft(index);
                         break;
 
                     case 3://inlet right
-                        inletRight();
+                        inletRight(index);
                         break;
 
                     case 4://outlet bottom
-                        outletOpen();
+                        outletOpen(index);
                         break;
                 }
             }
         }
 
         /** @brief 좌측(Red) inlet의 zou and he constant velocity condition을 계산함\n */
-s
+        private void inletLeft(int index)
         {
             int index9 = 9 * index;
 
@@ -235,7 +196,7 @@ s
         }
 
         /** @brief 우측(Blue) inlet의 zou and he constant velocity condition을 계산함\n */
-        private void inletRight()
+        private void inletRight(int index)
         {
             int index9 = 9 * index;
 
@@ -251,7 +212,7 @@ s
 
         /** @brief outlet의 Open-ended boundary condition을 계산함\n
         * interpolated condition을 이용하여 계산함 */
-        private void outletOpen()
+        private void outletOpen(int index)
         {
             int index9 = 9 * index;
 
@@ -264,6 +225,11 @@ s
         * 이 메소드에서 density, ux, uy, strain의 값이 계산된다 */
         public void macroscopic()
         {
+            int index;
+
+            double sxx, syx, sxy, syy;
+            double eu, feq, usqr;
+
             for(index = 0; index < data.size[0] * data.size[1];index++)
             {
                 data.up[index] = data.ux[index];
@@ -352,13 +318,7 @@ s
             interfaces = interfaceSearch();
             controlWall(interfaces);
         }
-
-        class dic
-        {
-            public int key;
-            public double value;
-        }
-
+        
         /** @brief Geometry에서 경계선을 탐색하는 메소드\n
         * 지정한 범위의 design domain 내의 solid/fluid interface가 갖는 strain rate tensor의 값을 앞서 선언한 dictionary minDic, MaxDic에 저장함 */
         private Dictionary<int, double> interfaceSearch()
@@ -380,13 +340,9 @@ s
                 where data.map[i + j * data.size[0]] == 1
                 select index).Distinct();
 
-            var output =
-                 from index in interfaceTiles
-                 select new dic() { key = index, value = data.strain[index] };
+            var result = interfaceTiles.ToDictionary(o => o, o => data.strain[o]);
 
-            Dictionary<int, double> res = output.ToDictionary(o => o.key, o => o.value);
-
-            return res;
+            return result;
         }
 
         /** @brief Shape optimization 로직에 의해 Geometry를 변경하는 메소드\n
@@ -416,8 +372,7 @@ s
             {
                 data.map[item] = 0;
             }
-
-
+            
             // interface strain 값을 기준으로 오름차순으로 정렬함
             var revRank =
                 from tile in interfaces
@@ -437,7 +392,7 @@ s
         /** @brief Shape optimization 과정이 끝나고 모든 시뮬레이션 변수의 값을 초기화 하는 함수 */
         public void resetAll()
         {
-            for(index = 0; index < data.size[0] * data.size[1]; index++)
+            for(int index = 0; index < data.size[0] * data.size[1]; index++)
             {
                 data.ux[index] = 0;
                 data.uy[index] = 0;

@@ -537,7 +537,7 @@ __kernel void maxima(
             {
                 test();
                 maxima = data.criteria.Max();
-                if (maxima < 0.01d)
+                if (maxima < 0.00001d)
                 {
                     data.criteria[0] = maxima;
                     data.sb.Append(maxima.ToString());

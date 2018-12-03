@@ -42,3 +42,15 @@ C:\Users\Emalron\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csproj.CoreC
 C:\Users\Emalron\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csproj.CopyComplete
 C:\Users\Emalron\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.exe
 C:\Users\Emalron\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.pdb
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\bin\Debug\LBMace.exe.config
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\bin\Debug\LBMace.exe
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\bin\Debug\LBMace.pdb
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\bin\Debug\Cloo.dll
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csprojAssemblyReference.cache
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.Form1.resources
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.Properties.Resources.resources
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csproj.GenerateResource.cache
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csproj.CoreCompileInputs.cache
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.csproj.CopyComplete
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.exe
+C:\Users\pjm21\Desktop\Programming\LBMace\LBMace\obj\Debug\LBMace.pdb

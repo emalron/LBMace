@@ -210,7 +210,7 @@ namespace LBMace
         }
 
         /** @brief 좌측(Red) inlet의 zou and he constant velocity condition을 계산함\n */
-        private void inletLeft()
+s
         {
             int index9 = 9 * index;
 
@@ -348,107 +348,90 @@ namespace LBMace
         * interface를  먼저 탐색하고, shape optimization 로직에 따라 Geometry를 수정한다. */
         public void optimize()
         {
-            interfaceSearch();
-            controlWall();
+            Dictionary<int, double> interfaces = new Dictionary<int, double>();
+            interfaces = interfaceSearch();
+            controlWall(interfaces);
+        }
+
+        class dic
+        {
+            public int key;
+            public double value;
         }
 
         /** @brief Geometry에서 경계선을 탐색하는 메소드\n
         * 지정한 범위의 design domain 내의 solid/fluid interface가 갖는 strain rate tensor의 값을 앞서 선언한 dictionary minDic, MaxDic에 저장함 */
-        private List<int> interfaceSearch()
+        private Dictionary<int, double> interfaceSearch()
         {
 
             // find all flud tiles
             var fluidTiles =
                 from index in Enumerable.Range(0, data.map.Length)
-                where data.map[i + j * data.size[0]] == 1
+                where data.map[index] == 0
                 select index;
 
             // select fluid tiles which have at least an adjecent solid tile among the fluid tiles
-            var interfaceTiles =
+            var interfaceTiles = (
                 from index in fluidTiles
                 from n in Enumerable.Range(0, 9)
-                let j = (int)(index / data.size[0] + ey[n])
-                let i = (int)(index % data.size[0] + ex[n])
-                where data.map[i + j * data.size[0]] == 0
-                select index;
+                let j = (int)(index / data.size[0]) + (int)(ey[n])
+                let i = (int)(index % data.size[0]) + (int)(ex[n])
+                where i > 1 && (i < data.size[0]-2) && j > 1 && (j < data.size[1]-2)
+                where data.map[i + j * data.size[0]] == 1
+                select index).Distinct();
 
             var output =
-                from index in interfaceTiles
-                select Dictionary<int, double>(index, data.strain[index])
+                 from index in interfaceTiles
+                 select new dic() { key = index, value = data.strain[index] };
 
-            /*                
-            int ax, ay, dx, dy;
-            for (int j = 2; j < data.size[1]-2; j++)
-            {
-                for (int i = 2; i < data.size[0]-2; i++)
-                {
-                    index = i + data.size[0] * j;
+            Dictionary<int, double> res = output.ToDictionary(o => o.key, o => o.value);
 
-                    if(data.map[index] == 1)
-                    {
-                        for (int n = 0; n < 9; n++)
-                        {
-                            ax = i + (int)ex[n];
-                            ay = j + (int)ey[n];
-                            dx = ((ax % data.size[0]) + data.size[0]) % data.size[0];
-                            dy = ((ay % data.size[1]) + data.size[1]) % data.size[1];
-
-                            if(data.map[dx + data.size[0] * dy] == 0)
-                            {
-                                minDic[dx + data.size[0] * dy] = data.strain[dx + data.size[0] * dy];
-                                MaxDic[dx + data.size[0] * dy] = data.strain[dx + data.size[0] * dy];
-                            }
-                        }
-                    }
-                }
-            }
-            */
+            return res;
         }
 
         /** @brief Shape optimization 로직에 의해 Geometry를 변경하는 메소드\n
         * Dictionary의 값을 정렬하여 최대/최소 strain rate tensor 값과 해당 lattice의 ID를 얻고, Exchange rate(data.xrate) 만큼 solid/fluid를 서로 교환한다 */
-        private void controlWall()
+        private void controlWall(Dictionary<int, double> interfaces)
         {
-            int num, cnt, ax, ay, dx, dy;
-
-            var rank = MaxDic.OrderBy(x => x.Value);
-            num = MaxDic.Count;
+            // interface tiles을 strain 값으로 내림차순함.
+            var rank = interfaces.OrderByDescending(x => x.Value);
+            int num = interfaces.Count;
             int rate = (int)(num * data.xrate / 100d);
-            cnt = 0;
-            int nim = 0;
 
-            while(cnt < rate)
+            // strain 값을 기준으로 exchange rate 만큼의 타일이 변화 대상
+            var topTiles = rank.Take(rate);
+
+            // 상위 strain 값을 가진 타일 주변의 wall tile을 찾음, 중복 제거 및 exchange rate 만큼 획득
+            var toFluid = (
+                from tile in topTiles
+                from n in Enumerable.Range(0, 9)
+                let j = (int)(tile.Key / data.size[0]) + (int)(ey[n])
+                let i = (int)(tile.Key % data.size[0]) + (int)(ex[n])
+                where i > 1 && (i < data.size[0] - 2) && j > 1 && (j < data.size[1] - 2)
+                where data.map[i + j * data.size[0]] == 1
+                select (i + j * data.size[0])).Distinct().Take(rate);
+
+            // 맵 변화
+            foreach(var item in toFluid)
             {
-                i = rank.ElementAt(num - 1 - nim).Key % data.size[0];
-                j = rank.ElementAt(num - 1 - nim).Key / data.size[0];
-            
-                for (int k = 0; k < 9; k++)
-                {
-                    ax = i + (int)ex[k];
-                    ay = j + (int)ey[k];
-                    dx = ((ax % data.size[0]) + data.size[0]) % data.size[0];
-                    dy = ((ay % data.size[1]) + data.size[1]) % data.size[1];
-            
-                    if ((data.map[dx + data.size[0] * dy] == 1) && (cnt < rate))
-                    {
-                        // data.map[dx + data.size[0] * dy] = 0;
-                        cnt++;
-                    }
-                }
-            
-                nim++;
+                data.map[item] = 0;
             }
-            
-            MaxDic.Clear();
 
-            rank = minDic.OrderBy(x => x.Value);
-            num = minDic.Count;
 
-            for (int n = 0; n < rate; n++)
+            // interface strain 값을 기준으로 오름차순으로 정렬함
+            var revRank =
+                from tile in interfaces
+                orderby tile.Value
+                select tile;
+
+            // 그중 하위 fluid 타일을 exchange rate 만큼 확보함
+            var toSolid = revRank.Take(rate);
+
+            // 확보된 fluid 타일을 solid 타일로 변경함
+            foreach(var item in toSolid)
             {
-                data.map[rank.ElementAt(n).Key] = 1;
+                data.map[item.Key] = 1;
             }
-            minDic.Clear();
         }
 
         /** @brief Shape optimization 과정이 끝나고 모든 시뮬레이션 변수의 값을 초기화 하는 함수 */

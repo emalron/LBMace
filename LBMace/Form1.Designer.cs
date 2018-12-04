@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.button_CPU = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -48,6 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tb_Re = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.numericXrate = new System.Windows.Forms.NumericUpDown();
@@ -79,33 +78,14 @@
             this.button_CPU.UseVisualStyleBackColor = true;
             this.button_CPU.Click += new System.EventHandler(this.button_CPU_Click);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 224);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 15);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "file path";
-            // 
-            // textBox1
-            // 
-            this.textBox1.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.textBox1.Location = new System.Drawing.Point(7, 242);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(211, 25);
-            this.textBox1.TabIndex = 10;
-            this.textBox1.Text = "E:\\result\\";
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(240, 224);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 15);
+            this.label7.Size = new System.Drawing.Size(169, 15);
             this.label7.TabIndex = 17;
-            this.label7.Text = "file name";
+            this.label7.Text = "file name, ex) fluid_0.vtk";
             // 
             // textBox2
             // 
@@ -115,6 +95,7 @@
             this.textBox2.Size = new System.Drawing.Size(221, 25);
             this.textBox2.TabIndex = 11;
             this.textBox2.Text = "fluid";
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label8
             // 
@@ -123,7 +104,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(186, 15);
             this.label8.TabIndex = 20;
-            this.label8.Text = "the results will be saved as";
+            this.label8.Text = "the results will be saved in ";
             // 
             // button_Parallel
             // 
@@ -270,6 +251,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.button3);
             this.tabPage3.Controls.Add(this.button2);
             this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.numericXrate);
@@ -280,9 +262,7 @@
             this.tabPage3.Controls.Add(this.textBox2);
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.optiChk);
-            this.tabPage3.Controls.Add(this.textBox1);
             this.tabPage3.Controls.Add(this.steadyChk);
-            this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.button_CPU);
             this.tabPage3.Controls.Add(this.button_Parallel);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
@@ -293,6 +273,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "3. Simulation";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(8, 242);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(205, 25);
+            this.button3.TabIndex = 37;
+            this.button3.Text = "Choose a folder to save";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -336,7 +326,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(195, 289);
+            this.label3.Location = new System.Drawing.Point(188, 289);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(149, 15);
             this.label3.TabIndex = 36;
@@ -433,8 +423,6 @@
 
         #endregion
         private System.Windows.Forms.Button button_CPU;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label8;
@@ -461,6 +449,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

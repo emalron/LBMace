@@ -61,6 +61,9 @@ namespace LBMace
             solver = new Solver();
             postprocess = new Postprocess();
             gpu = new GPGPU();
+
+            label3.Text = data.savePath;
+            textBox2.Text = data.resultFileName;
         }
 
         /** @brief 1. Geometry의 Load Geometry 버튼\n
@@ -147,7 +150,7 @@ namespace LBMace
         * Exchange Rate와 결과 파일의 이름과 경로를 설정함 */
         private void button2_Click(object sender, EventArgs e)
         {
-            postprocess.setMeta(textBox1.Text, textBox2.Text);
+            postprocess.setMeta(data.savePath, data.resultFileName);
             data.xrate = (int)numericXrate.Value;
 
             button_CPU.Enabled = true;
@@ -381,6 +384,23 @@ namespace LBMace
             status.Text += "Reynolds #: " + data.Re + "\r\n";
             status.Text += "Initial velocity: " + data.u0 + "\r\n";
             status.Text += "Relaxation Time: " + data.tau + "\r\n";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string path_ = data.getFilePath();
+            label3.Text = path_;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            string plain1 = "file name, ex)";
+            string filename = textBox2.Text;
+            string ext = "_0.vtx";
+
+            string text_ = String.Format("{0} {1}{2}", plain1, filename, ext);
+
+            label7.Text = text_;
         }
     }
 }

@@ -368,6 +368,7 @@
             this.optiChk.TabIndex = 7;
             this.optiChk.Text = "shape optimizer";
             this.optiChk.UseVisualStyleBackColor = true;
+            this.optiChk.CheckedChanged += new System.EventHandler(this.optiChk_CheckedChanged_1);
             // 
             // steadyChk
             // 

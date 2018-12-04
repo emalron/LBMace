@@ -421,11 +421,13 @@ namespace LBMace
             string optimal = String.Format("Optimization mode: {0}", this.optimalRun_.ToString());
             string iteration = String.Format("Iternation: {0}", this.iteration_.ToString());
             string exRate = String.Format("Exchange rate: {0}", this.xrate_.ToString());
+            string crit = String.Format("Residue Criteria: {0}", this.criteria.ToString());
 
             output.Add(steady);
             output.Add(optimal);
             output.Add(iteration);
             output.Add(exRate);
+            output.Add(crit);
             output.Add("");
 
             // Path

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Timer = System.Windows.Forms.Timer;
 
 namespace LBMace
 {
@@ -83,13 +84,29 @@ namespace LBMace
             }
         }
 
-        private void button_CPU_Click(object sender, EventArgs e)
+        private async void button_CPU_Click(object sender, EventArgs e)
         {
             // System.Diagnostics.Process.Start(postprocess.Filepath);
             button_RUN.Enabled = false;
             button_STOP.Enabled = true;
 
-            manager.Run();
+            Timer timer = new Timer();
+            timer.Tick += showCrit;
+            timer.Interval = 1000;
+            timer.Start();
+
+            await Task.Run(() =>
+            {
+                manager.Run();
+            });
+        }
+
+        private void showCrit(object sender, EventArgs e)
+        {
+            double crit = data.diff[0];
+            string msg = String.Format("Now your residue is... {0:E4}", crit);
+
+            label9.Text = msg;
         }
 
         private void button_Parallel_Click(object sender, EventArgs e)

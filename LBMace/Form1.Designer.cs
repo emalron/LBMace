@@ -46,6 +46,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tb_Re = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -60,8 +62,7 @@
             this.steadyChk = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -259,6 +260,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.textBox1);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.comboBox1);
@@ -286,6 +288,24 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "3. Simulation";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(9, 164);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(112, 25);
+            this.textBox1.TabIndex = 43;
+            this.textBox1.Text = "0.001";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 146);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(60, 15);
+            this.label6.TabIndex = 42;
+            this.label6.Text = "Residue";
             // 
             // comboBox1
             // 
@@ -452,23 +472,14 @@
             this.richTextBox1.TabIndex = 41;
             this.richTextBox1.Text = "";
             // 
-            // label6
+            // label9
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 146);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 15);
-            this.label6.TabIndex = 42;
-            this.label6.Text = "Residue";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(9, 164);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(112, 25);
-            this.textBox1.TabIndex = 43;
-            this.textBox1.Text = "0.001";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(135, 167);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 15);
+            this.label9.TabIndex = 44;
+            this.label9.Text = "label9";
             // 
             // Form1
             // 
@@ -530,6 +541,7 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label9;
     }
 }
 

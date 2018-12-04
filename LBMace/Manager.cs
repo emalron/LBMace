@@ -13,7 +13,7 @@ namespace LBMace
         Solver solver;
         GPGPU gpu;
         Postprocess postprocess;
-        States myState;
+        public States myState;
         Devices myDevice;
 
         public enum States

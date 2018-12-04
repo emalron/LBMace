@@ -28,7 +28,7 @@ namespace LBMace
             size = new int[2];
             sb = new StringBuilder();
 
-            savePath_ = @"\";
+            savePath_ = System.Environment.CurrentDirectory;
             saveFileName_ = "fluid";
         }
 

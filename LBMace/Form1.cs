@@ -93,8 +93,6 @@ namespace LBMace
          
         private void button2_Click(object sender, EventArgs e)
         {
-            postprocess.setMeta(data.savePath, data.resultFileName);
-
             button_CPU.Enabled = true;
             button_Parallel.Enabled = true;
         }
@@ -358,7 +356,6 @@ namespace LBMace
                 data.setExchangeRate((double)numericXrate.Value);
                 data.setSimulationMode(steadyChk.Checked, optiChk.Checked);
                 data.setFileName(textBox2.Text);
-                postprocess.setMeta(data.savePath, data.saveFileName);
                 label3.Text = data.savePath;
 
                 string plain1 = "file name, ex)";
@@ -367,6 +364,7 @@ namespace LBMace
                 string text_ = String.Format("{0} {1}{2}", plain1, filename, ext);
                 label7.Text = text_;
 
+                richTextBox1.Text = "";
                 foreach (string line in data.getSimulationInfo())
                 {
                     if (line.StartsWith("#"))
@@ -381,6 +379,11 @@ namespace LBMace
                     richTextBox1.AppendText(String.Format("{0}\r\n", line));
                 }
             }
+        }
+
+        private void optiChk_CheckedChanged_1(object sender, EventArgs e)
+        {
+            updateForm(true);
         }
     }
 }

@@ -47,7 +47,6 @@
             this.tb_Re = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.numericXrate = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
@@ -56,6 +55,10 @@
             this.optiChk = new System.Windows.Forms.CheckBox();
             this.steadyChk = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -211,6 +214,7 @@
             this.tb_u0.Size = new System.Drawing.Size(114, 25);
             this.tb_u0.TabIndex = 4;
             this.tb_u0.Text = "0.08";
+            this.tb_u0.TextChanged += new System.EventHandler(this.tb_u0_TextChanged);
             // 
             // status
             // 
@@ -248,11 +252,14 @@
             this.tb_Re.Size = new System.Drawing.Size(114, 25);
             this.tb_Re.TabIndex = 3;
             this.tb_Re.Text = "20";
+            this.tb_Re.TextChanged += new System.EventHandler(this.tb_Re_TextChanged);
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label5);
+            this.tabPage3.Controls.Add(this.radioButton2);
+            this.tabPage3.Controls.Add(this.radioButton1);
             this.tabPage3.Controls.Add(this.button3);
-            this.tabPage3.Controls.Add(this.button2);
             this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.numericXrate);
             this.tabPage3.Controls.Add(this.label3);
@@ -284,18 +291,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button2
-            // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(7, 8);
-            this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(133, 29);
-            this.button2.TabIndex = 12;
-            this.button2.Text = "Simulation Setup";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -322,6 +317,7 @@
             0,
             0,
             0});
+            this.numericXrate.ValueChanged += new System.EventHandler(this.numericXrate_ValueChanged);
             // 
             // label3
             // 
@@ -349,6 +345,7 @@
             0,
             0,
             0});
+            this.numericIter.ValueChanged += new System.EventHandler(this.numericIter_ValueChanged);
             // 
             // label4
             // 
@@ -384,6 +381,7 @@
             this.steadyChk.TabIndex = 6;
             this.steadyChk.Text = "steady-state";
             this.steadyChk.UseVisualStyleBackColor = true;
+            this.steadyChk.CheckedChanged += new System.EventHandler(this.steadyChk_CheckedChanged_1);
             // 
             // tabPage4
             // 
@@ -397,11 +395,53 @@
             this.tabPage4.Text = "4. Results";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(9, 335);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(58, 19);
+            this.radioButton1.TabIndex = 38;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "CPU";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(73, 335);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(59, 19);
+            this.radioButton2.TabIndex = 39;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "GPU";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 366);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(186, 15);
+            this.label5.TabIndex = 40;
+            this.label5.Text = "the results will be saved in ";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(511, 40);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(291, 513);
+            this.richTextBox1.TabIndex = 41;
+            this.richTextBox1.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 565);
+            this.ClientSize = new System.Drawing.Size(814, 565);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
@@ -448,8 +488,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

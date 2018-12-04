@@ -109,6 +109,23 @@ namespace LBMace
         public GPGPU()
         {
             data = Data.get();
+
+            ComputeContextPropertyList properties = new ComputeContextPropertyList(ComputePlatform.Platforms[0]);
+            ctx = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+
+            string deviceInfo = ComputePlatform.Platforms[0].Devices[0].Name;
+        }
+
+        public static List<string> getDeviceInfo()
+        {
+            List<string> output = new List<string>();
+
+            foreach(var platform in ComputePlatform.Platforms)
+            {
+                output.Add(platform.Name);
+            }
+
+            return output;
         }
 
         /** @brief openCL을 초기화하는 메소드\n
@@ -121,11 +138,16 @@ namespace LBMace
             compileKernel();
         }
 
-        /** @brief GPGPU를 위해 DEVICE에 충분한 메모리 공간을 할당하고, HOST의 데이터를 GPGPU로 복사함 */
-        private void declareMeta()
+        private void declareContext()
         {
             ComputeContextPropertyList properties = new ComputeContextPropertyList(ComputePlatform.Platforms[0]);
             ctx = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+        }
+
+        /** @brief GPGPU를 위해 DEVICE에 충분한 메모리 공간을 할당하고, HOST의 데이터를 GPGPU로 복사함 */
+        private void declareMeta()
+        {
+            
             cq = new ComputeCommandQueue(ctx, ctx.Devices[0], ComputeCommandQueueFlags.None);
             prog = new ComputeProgram(ctx, kernels);
             

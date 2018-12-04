@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button_CPU = new System.Windows.Forms.Button();
+            this.button_RUN = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.button_Parallel = new System.Windows.Forms.Button();
+            this.button_STOP = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -46,6 +46,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tb_Re = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.button3 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.numericXrate = new System.Windows.Forms.NumericUpDown();
@@ -55,10 +59,9 @@
             this.optiChk = new System.Windows.Forms.CheckBox();
             this.steadyChk = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.label5 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -69,17 +72,17 @@
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button_CPU
+            // button_RUN
             // 
-            this.button_CPU.Enabled = false;
-            this.button_CPU.Location = new System.Drawing.Point(7, 435);
-            this.button_CPU.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button_CPU.Name = "button_CPU";
-            this.button_CPU.Size = new System.Drawing.Size(472, 29);
-            this.button_CPU.TabIndex = 13;
-            this.button_CPU.Text = "CPU Run";
-            this.button_CPU.UseVisualStyleBackColor = true;
-            this.button_CPU.Click += new System.EventHandler(this.button_CPU_Click);
+            this.button_RUN.Enabled = false;
+            this.button_RUN.Location = new System.Drawing.Point(7, 435);
+            this.button_RUN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button_RUN.Name = "button_RUN";
+            this.button_RUN.Size = new System.Drawing.Size(472, 29);
+            this.button_RUN.TabIndex = 13;
+            this.button_RUN.Text = "Run";
+            this.button_RUN.UseVisualStyleBackColor = true;
+            this.button_RUN.Click += new System.EventHandler(this.button_CPU_Click);
             // 
             // label7
             // 
@@ -109,17 +112,17 @@
             this.label8.TabIndex = 20;
             this.label8.Text = "the results will be saved in ";
             // 
-            // button_Parallel
+            // button_STOP
             // 
-            this.button_Parallel.Enabled = false;
-            this.button_Parallel.Location = new System.Drawing.Point(7, 471);
-            this.button_Parallel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button_Parallel.Name = "button_Parallel";
-            this.button_Parallel.Size = new System.Drawing.Size(472, 29);
-            this.button_Parallel.TabIndex = 14;
-            this.button_Parallel.Text = "GPGPU Mode";
-            this.button_Parallel.UseVisualStyleBackColor = true;
-            this.button_Parallel.Click += new System.EventHandler(this.button_Parallel_Click);
+            this.button_STOP.Enabled = false;
+            this.button_STOP.Location = new System.Drawing.Point(8, 471);
+            this.button_STOP.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button_STOP.Name = "button_STOP";
+            this.button_STOP.Size = new System.Drawing.Size(471, 29);
+            this.button_STOP.TabIndex = 14;
+            this.button_STOP.Text = "Stop";
+            this.button_STOP.UseVisualStyleBackColor = true;
+            this.button_STOP.Click += new System.EventHandler(this.button_Parallel_Click);
             // 
             // textBox4
             // 
@@ -256,6 +259,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.textBox1);
+            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.comboBox1);
             this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.radioButton2);
             this.tabPage3.Controls.Add(this.radioButton1);
@@ -270,8 +276,8 @@
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.optiChk);
             this.tabPage3.Controls.Add(this.steadyChk);
-            this.tabPage3.Controls.Add(this.button_CPU);
-            this.tabPage3.Controls.Add(this.button_Parallel);
+            this.tabPage3.Controls.Add(this.button_RUN);
+            this.tabPage3.Controls.Add(this.button_STOP);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage3.Name = "tabPage3";
@@ -280,6 +286,47 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "3. Simulation";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(138, 331);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 23);
+            this.comboBox1.TabIndex = 41;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 366);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(186, 15);
+            this.label5.TabIndex = 40;
+            this.label5.Text = "the results will be saved in ";
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(73, 335);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(59, 19);
+            this.radioButton2.TabIndex = 39;
+            this.radioButton2.Text = "GPU";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(9, 335);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(58, 19);
+            this.radioButton1.TabIndex = 38;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "CPU";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // button3
             // 
@@ -294,7 +341,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 146);
+            this.label10.Location = new System.Drawing.Point(7, 77);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(108, 15);
             this.label10.TabIndex = 35;
@@ -302,7 +349,7 @@
             // 
             // numericXrate
             // 
-            this.numericXrate.Location = new System.Drawing.Point(9, 165);
+            this.numericXrate.Location = new System.Drawing.Point(9, 96);
             this.numericXrate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericXrate.Maximum = new decimal(new int[] {
             10000000,
@@ -330,7 +377,7 @@
             // 
             // numericIter
             // 
-            this.numericIter.Location = new System.Drawing.Point(7, 104);
+            this.numericIter.Location = new System.Drawing.Point(7, 35);
             this.numericIter.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numericIter.Maximum = new decimal(new int[] {
             10000000,
@@ -350,7 +397,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 85);
+            this.label4.Location = new System.Drawing.Point(5, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 15);
             this.label4.TabIndex = 30;
@@ -361,7 +408,7 @@
             this.optiChk.AutoSize = true;
             this.optiChk.Checked = true;
             this.optiChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.optiChk.Location = new System.Drawing.Point(242, 105);
+            this.optiChk.Location = new System.Drawing.Point(242, 36);
             this.optiChk.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optiChk.Name = "optiChk";
             this.optiChk.Size = new System.Drawing.Size(132, 19);
@@ -375,7 +422,7 @@
             this.steadyChk.AutoSize = true;
             this.steadyChk.Checked = true;
             this.steadyChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.steadyChk.Location = new System.Drawing.Point(128, 105);
+            this.steadyChk.Location = new System.Drawing.Point(128, 36);
             this.steadyChk.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.steadyChk.Name = "steadyChk";
             this.steadyChk.Size = new System.Drawing.Size(113, 19);
@@ -396,38 +443,6 @@
             this.tabPage4.Text = "4. Results";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(9, 335);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(58, 19);
-            this.radioButton1.TabIndex = 38;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "CPU";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(73, 335);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(59, 19);
-            this.radioButton2.TabIndex = 39;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "GPU";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 366);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(186, 15);
-            this.label5.TabIndex = 40;
-            this.label5.Text = "the results will be saved in ";
-            // 
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(511, 40);
@@ -436,6 +451,24 @@
             this.richTextBox1.Size = new System.Drawing.Size(291, 513);
             this.richTextBox1.TabIndex = 41;
             this.richTextBox1.Text = "";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 146);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(60, 15);
+            this.label6.TabIndex = 42;
+            this.label6.Text = "Residue";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(9, 164);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(112, 25);
+            this.textBox1.TabIndex = 43;
+            this.textBox1.Text = "0.001";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Form1
             // 
@@ -463,11 +496,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button button_CPU;
+        private System.Windows.Forms.Button button_RUN;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button_Parallel;
+        private System.Windows.Forms.Button button_STOP;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -494,6 +527,9 @@
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label6;
     }
 }
 

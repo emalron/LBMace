@@ -12,7 +12,13 @@ namespace LBMace
         Solver solver;
         GPGPU gpgpu;
         Postprocess postprocess;
-        Form1 form;
+        States myState;
+
+        enum States
+        {
+            IDLE,
+            READY
+        }
 
         public Manager()
         {
@@ -20,10 +26,9 @@ namespace LBMace
             solver = new Solver();
             gpgpu = new GPGPU();
             postprocess = new Postprocess();
-            form = new Form1();
         }
 
-        public void getInput()
+        public void setGeometry()
         {
             if(data.mapping())
             {

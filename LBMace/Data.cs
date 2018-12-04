@@ -8,97 +8,18 @@ using System.Windows.Forms;
 
 namespace LBMace
 {
-    /**
-    * @brief 시뮬레이션에 사용할 변수를 초기화 하는 클래스 \n
-    * 본 시뮬레이션에서 사용되는 변수는 전부 data 클래스에 저장되며, data 클래스는 Singleton 패턴을 이용하여 관리의 용이성을 향상하였다.
-    */
     class Data
     {
-        /** @brief data 클래스를 싱글톤으로 설정하는 코드 */
+        // singleton...
         private static Data data;
-
-        /** @brief Computation domain인 lattice의 크기 */
-        public int[] size;
-        /** @brief Inlet에 해당하는 lattice의 번호를 저장함 */
-        public int[] inletID;
-        /** @brief 각 lattice의 type(solid, fluid, wall)을 저장함 */
-        public int[] map;
-        /** @brief inlet velocity 설정
-        * Reynolds # 계산에 사용 됨
-        */
-        public double u0;
-        /** @brief Exchange rate를 의미함*/
-        public double xrate;
-        /** @brief 유동의 Reynolds #를 저장함 */
-        public double Re;
-
-        /** @brief distribution function의 초기값 */
-        public double[] fin;
-        /** @brief distribution function의 collision step 이후의 값 */
-        public double[] fout;
-        /** @brief distribution function의 zeroth moment인 density\n
-        * density는 Macroscopic variable이다.
-        */
-        public double[] density;
-        /** @brief distribution function의 first moment인 velocity의 x vector\n 
-        * ux는 Macroscopic variable이다.
-        */
-        public double[] ux;
-        /** @brief distribution function의 first moment인 velocity의 y vector\n 
-        * uy는 Macroscopic variable이다.
-        */
-        public double[] uy;
-        /** @brief steady-state 검사용 배열\n
-        * 전체 simulation domain에 대해 iteration 간의 ux 값 차를 구하여 steady-state를 검사함
-        */
-        public double[] criteria;
-        /** @brief criteria 계산을 위한 버퍼\n
-        * 이전 iteration의 velocity를 저장함.
-        */
-        public double[] up, vp;
-        /** @brief strain rate tensor의 값을 저장함.
-        */
-        public double[] strain;
-        /** @brief dynamic pressure를 저장 함.
-        */
-        public double[] dynamic;
-        /** @brief 메시지 저장을 위한 StringBulider 객체
-        */
-        public StringBuilder sb;
-        /** @brief inlet lattice의 길이\n
-        * Reynolds # 계산에 사용 됨
-        */
-        private double inletLeng;
-
-        private string savePath_;
-        public string savePath
+        public static Data get()
         {
-            get
+            if (data == null)
             {
-                return savePath_;
+                data = new Data();
             }
+            return data;
         }
-
-        private string resultFileName_;
-        public string resultFileName
-        {
-            get
-            {
-                return resultFileName_;
-            }
-        }
-
-        
-        /** @brief relaxation time을 계산함
-        */
-        public double tau
-        {
-            get
-            {
-                return u0 * inletLeng / (this.Re) * 3.0d + 0.5d;
-            }
-        }
-
 
         private Data()
         {
@@ -108,27 +29,148 @@ namespace LBMace
             sb = new StringBuilder();
 
             savePath_ = @"\";
-            resultFileName_ = "fluid";
+            saveFileName_ = "fluid";
         }
 
-        /** @brief data의 싱글턴 생성을 위한 함수\n
-        * get을 호출 할 때, data 클래스가 생성되어 있지 않다면 생성 후 리턴함\n
-        * @return data 클래스 그 자체
-        */
-        public static Data get()
+        #region internal variables
+        // distribute functions의 초기값과 다음 스텝 값
+        public double[] fin, fout;
+        
+        // distribution functions의 zeroth moment, density
+        public double[] density;
+        
+        // distribution function의 first moment, velocity
+        public double[] ux, uy;
+        
+        // 수렴도 계산에 사용됨
+        public double[] criteria;
+        public double[] up, vp;
+
+        // heuristic criteria: strain rate tensor, dynamic pressure
+        public double[] strain, dynamic;
+        
+        // 
+        public StringBuilder sb;
+        #endregion
+
+        #region Simulation setting
+        // Geometry 정보. map, size, inletID
+        public int[] map, size, inletID;
+        // inlet의 길이를 계산함
+        private double inletLeng;
+
+        // 초기 CFL을 결정하는 정보 초기속도 u0, 레이놀즈 수 Re, 교환비 xrate
+        private double u0_, Re_, xrate_;
+        public double u0
         {
-            if(data == null)
+            get
             {
-                data = new Data();
+                return u0_;
             }
-            return data;
+        }
+        public double Re
+        {
+            get
+            {
+                return Re_;
+            }
+        }
+        public double xrate
+        {
+            get
+            {
+                return xrate_;
+            }
         }
 
-        /** @brief inletLeng과 Re, u0를 설정하는 함수
-        * @param Re Reynolds #
-        * @param u0 initial velocity
-        */
-        public void relaxationTime(double Re, double u0)
+        // relaxation time을 계산함. BGK Model
+        public double tau
+        {
+            get
+            {
+                return u0 * inletLeng / (this.Re_) * 3.0d + 0.5d;
+            }
+        }
+
+        // optimization 및 simulation 횟수
+        private int iteration_;
+        public int iteration {
+            get
+            {
+                return iteration_;
+            }
+        }
+
+        // Solver 동작 모드
+        private bool steadyRun_, optimizingRun_;
+
+        public bool steadyRun
+        {
+            get
+            {
+                return steadyRun_;
+            }
+        }
+
+        public bool optimizingRun
+        {
+            get
+            {
+                return optimizingRun_;
+            }
+        }
+
+        // file 저장 정보
+        private string savePath_;
+        public string savePath
+        {
+            get
+            {
+                return savePath_;
+            }
+        }
+
+        private string saveFileName_;
+        public string saveFileName
+        {
+            get
+            {
+                return saveFileName_;
+            }
+        }
+
+        public string resultFileName
+        {
+            get
+            {
+                return String.Format(@"{0}\{1}", savePath_, saveFileName_);
+            }
+        }
+        #endregion
+
+        public void setFluidInfo(double Re, double u0)
+        {
+            this.Re_ = Re;
+            this.u0_ = u0;
+        }
+
+        public void setExchangeRate(double rate)
+        {
+            this.xrate_ = rate;
+        }
+
+        public void setIteration(int iter)
+        {
+            this.iteration_ = iter;
+        }
+
+        public void setSimulationMode(bool steady, bool opti)
+        {
+            this.steadyRun_ = steady;
+            this.optimizingRun_ = opti;
+        }
+
+        private void getInletLength()
         {
             double x0, x1, y0, y1;
             x0 = inletID[0] % size[0];
@@ -137,18 +179,14 @@ namespace LBMace
             y1 = inletID[1] / size[0];
 
             inletLeng = Math.Abs(Math.Sqrt(Math.Pow((x1 - x0), 2) + Math.Pow((y1 - y0), 2)));
-            this.Re = Re;
-
+            
             // viscosity = 0.04d;
             // tau = 3d * viscosity + 0.5d;
             
             // u0 = ((tau-0.5d)/3d) * this.Re / inletLeng;
-            this.u0 = u0;
         }
 
-        /** @brief map 데이터를 읽어와서 simulation domain을 초기화
-        * @return 메소드 수행 성공 여부
-        */
+        // Bitmap으로부터 map 데이터를 읽음
         public bool mapping()
         {
             Bitmap tiles_ = new Bitmap(10,10);
@@ -170,6 +208,9 @@ namespace LBMace
         private void init()
         {
             int area = size[0] * size[1];
+
+            // inlet length를 계산함.
+            getInletLength();
 
             /* D2Q9 scheme의 weighting factor */
             double[] weight = new double[9] { 4d / 9d, 1d / 9d, 1d / 9d, 1d / 9d, 1d / 9d, 1d / 36d, 1d / 36d, 1d / 36d, 1d / 36d };
@@ -214,6 +255,7 @@ namespace LBMace
             if(ofd.FileName != "")
             {
                 tiles = new Bitmap(Image.FromFile(ofd.FileName));
+                // tiles.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 return true;
             }
             
@@ -313,7 +355,7 @@ namespace LBMace
             return output;
         }
 
-        public string getFilePath()
+        public void setFilePath()
         {
             using (var fbd = new FolderBrowserDialog())
             {
@@ -322,12 +364,65 @@ namespace LBMace
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     savePath_ = fbd.SelectedPath;
-
-                    return savePath_;
                 }
             }
+        }
 
-            return null;
+        public void setFileName(string name)
+        {
+            if(!string.IsNullOrWhiteSpace(name))
+            {
+                this.saveFileName_ = name;
+            }
+        }
+
+        public List<string> getSimulationInfo()
+        {
+            List<string> output = new List<string>();
+
+            // Fluid info
+            output.Add("#Fluid info");
+            string initVelocity = String.Format("Initial Velocity: {0}", this.u0_.ToString());
+            string reynolds = String.Format("Reynolds #: {0}", this.Re_.ToString());
+            string chaLength = String.Format("Characteristic Length: {0}", this.inletLeng.ToString());
+            string relaxTime = String.Format("Relaxation Time: {0}", this.tau.ToString());
+
+            output.Add(initVelocity);
+            output.Add(chaLength);
+            output.Add(reynolds);
+            output.Add(relaxTime);
+            output.Add("");
+
+            // Setting
+            output.Add("#Configurations");
+            string steady = String.Format("Steady-state mode: {0}", this.steadyRun_.ToString());
+            string optimal = String.Format("Optimization mode: {0}", this.optimizingRun_.ToString());
+            string iteration = String.Format("Iternation: {0}", this.iteration_.ToString());
+            string exRate = String.Format("Exchange rate: {0}", this.xrate_.ToString());
+
+            output.Add(steady);
+            output.Add(optimal);
+            output.Add(iteration);
+            output.Add(exRate);
+            output.Add("");
+
+            // Path
+            string path = String.Format("Save Path: {0}", savePath_);
+            string name = String.Format("File Name: {0}", saveFileName_);
+
+            output.Add(path);
+            output.Add(name);
+            output.Add("");
+
+            // GPU Devices
+            output.Add("#GPGPU device list");
+            List<string> devices = GPGPU.getDeviceInfo();
+            foreach(var device in devices)
+            {
+                output.Add(device);
+            }
+
+            return output;
         }
     }
     

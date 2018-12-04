@@ -147,7 +147,6 @@ namespace LBMace
         /** @brief GPGPU를 위해 DEVICE에 충분한 메모리 공간을 할당하고, HOST의 데이터를 GPGPU로 복사함 */
         private void declareMeta()
         {
-            
             cq = new ComputeCommandQueue(ctx, ctx.Devices[0], ComputeCommandQueueFlags.None);
             prog = new ComputeProgram(ctx, kernels);
             
@@ -174,7 +173,7 @@ namespace LBMace
             gpu_density = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.density);
             gpu_fin = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.fin);
             gpu_fout = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.fout);
-            gpu_criteria = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.criteria);
+            gpu_criteria = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.diff);
             gpu_up = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.up);
             gpu_strain = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.strain);
             gpu_dynamic = new ComputeBuffer<double>(ctx, ComputeMemoryFlags.ReadWrite | ComputeMemoryFlags.CopyHostPointer, data.dynamic);
@@ -546,31 +545,29 @@ __kernel void maxima(
             cq.Execute(KernelMaxima, null, worker, null, null);
             cq.Finish();
 
-            data.criteria = cq.Read<double>(gpu_criteria, null);
+            data.diff = cq.Read<double>(gpu_criteria, null);
         }
 
         /** @brief kernelMaxima를 수행 결과로 Steady-state check를 수행함
         * @return Steady-state에 도달했다면 false를 반환함 */
-        public bool getError(bool mod)
+        public bool getError(bool check)
         {
             double maxima = 0;
 
-            if (mod)
+            if (check)
             {
                 test();
-                maxima = data.criteria.Max();
-                if (maxima < 0.01d)
+                maxima = data.diff.Max();
+                if (maxima < data.criteria)
                 {
-                    data.criteria[0] = maxima;
-                    data.sb.Append(maxima.ToString());
-                    data.sb.AppendLine();
+                    data.diff[0] = maxima;
+                    data.sb.AppendLine(maxima.ToString());
                     return false;
                 }
                 else
                 {
-                    data.criteria[0] = maxima;
-                    data.sb.Append(maxima.ToString());
-                    data.sb.AppendLine();
+                    data.diff[0] = maxima;
+                    data.sb.AppendLine(maxima.ToString());
                     return true;
                 }
             }
@@ -580,20 +577,7 @@ __kernel void maxima(
         /** @brief 시뮬레이션 변수를 초기화 하는 메소드 */
         public void resetAll()
         {
-            double[] weight = new double[9] { 4d / 9d, 1d / 9d, 1d / 9d, 1d / 9d, 1d / 9d, 1d / 36d, 1d / 36d, 1d / 36d, 1d / 36d };
-            for (int index = 0; index < data.size[0] * data.size[1]; index++)
-            {
-                data.ux[index] = 0;
-                data.uy[index] = 0;
-                data.density[index] = 1;
-                data.strain[index] = 0;
-                data.dynamic[index] = 0;
-
-                for (int n = 0; n < 9; n++)
-                {
-                    data.fin[n + 9 * index] = weight[n];
-                }
-            }
+            data.init();
 
             cq.Write<double>(gpu_u, data.ux, null);
             cq.Write<double>(gpu_v, data.uy, null);

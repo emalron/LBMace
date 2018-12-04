@@ -43,8 +43,9 @@ namespace LBMace
         public double[] ux, uy;
         
         // 수렴도 계산에 사용됨
-        public double[] criteria;
+        public double[] diff;
         public double[] up, vp;
+        public double criteria;
 
         // heuristic criteria: strain rate tensor, dynamic pressure
         public double[] strain, dynamic;
@@ -93,16 +94,38 @@ namespace LBMace
         }
 
         // optimization 및 simulation 횟수
-        private int iteration_;
+        private int iteration_, curIterOptimal_, curIterSim_;
         public int iteration {
             get
             {
                 return iteration_;
             }
         }
+        public int curIterOptimal
+        {
+            get
+            {
+                return curIterOptimal_;
+            }
+            set
+            {
+                curIterOptimal_ = value;
+            }
+        }
+        public int curIterSim
+        {
+            get
+            {
+                return curIterSim_;
+            }
+            set
+            {
+                curIterSim_ = value;
+            }
+        }
 
         // Solver 동작 모드
-        private bool steadyRun_, optimizingRun_;
+        private bool steadyRun_, optimalRun_;
 
         public bool steadyRun
         {
@@ -112,11 +135,11 @@ namespace LBMace
             }
         }
 
-        public bool optimizingRun
+        public bool optimalRun
         {
             get
             {
-                return optimizingRun_;
+                return optimalRun_;
             }
         }
 
@@ -167,7 +190,7 @@ namespace LBMace
         public void setSimulationMode(bool steady, bool opti)
         {
             this.steadyRun_ = steady;
-            this.optimizingRun_ = opti;
+            this.optimalRun_ = opti;
         }
 
         private void getInletLength()
@@ -205,7 +228,7 @@ namespace LBMace
 
         /** @brief 각종 시뮬레이션 관련 변수 선언 및 초기화
         */
-        private void init()
+        public void init()
         {
             int area = size[0] * size[1];
 
@@ -222,7 +245,7 @@ namespace LBMace
             uy = new double[area];
             up = new double[area];
             vp = new double[area];
-            criteria = new double[area];
+            diff = new double[area];
             strain = new double[area];
             dynamic = new double[area];
 
@@ -355,7 +378,7 @@ namespace LBMace
             return output;
         }
 
-        public void setFilePath()
+        public bool setFilePath()
         {
             using (var fbd = new FolderBrowserDialog())
             {
@@ -365,15 +388,14 @@ namespace LBMace
                 {
                     savePath_ = fbd.SelectedPath;
                 }
+
+                return true;
             }
         }
 
         public void setFileName(string name)
         {
-            if(!string.IsNullOrWhiteSpace(name))
-            {
-                this.saveFileName_ = name;
-            }
+            this.saveFileName_ = name;
         }
 
         public List<string> getSimulationInfo()
@@ -396,7 +418,7 @@ namespace LBMace
             // Setting
             output.Add("#Configurations");
             string steady = String.Format("Steady-state mode: {0}", this.steadyRun_.ToString());
-            string optimal = String.Format("Optimization mode: {0}", this.optimizingRun_.ToString());
+            string optimal = String.Format("Optimization mode: {0}", this.optimalRun_.ToString());
             string iteration = String.Format("Iternation: {0}", this.iteration_.ToString());
             string exRate = String.Format("Exchange rate: {0}", this.xrate_.ToString());
 

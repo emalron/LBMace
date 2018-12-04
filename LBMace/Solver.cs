@@ -297,12 +297,12 @@ namespace LBMace
 
                     if (realMax > maxima) {
                         maxima = realMax;
-                        data.criteria[0] = maxima;
+                        data.diff[0] = maxima;
                     }
                 }
                 if (maxima < 0.0000001d)
                 {
-                    data.criteria[0] = maxima;
+                    data.diff[0] = maxima;
                     return false;
                 }
             }
@@ -392,18 +392,7 @@ namespace LBMace
         /** @brief Shape optimization 과정이 끝나고 모든 시뮬레이션 변수의 값을 초기화 하는 함수 */
         public void resetAll()
         {
-            for(int index = 0; index < data.size[0] * data.size[1]; index++)
-            {
-                data.ux[index] = 0;
-                data.uy[index] = 0;
-                data.density[index] = 1;
-                data.strain[index] = 0;
-
-                for(int n=0; n < 9; n++)
-                {
-                    data.fin[n + 9 * index] = weight[n];
-                }
-            }
+            data.init();
         }
     }
 }

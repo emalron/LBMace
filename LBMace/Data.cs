@@ -70,6 +70,25 @@ namespace LBMace
         */
         private double inletLeng;
 
+        private string savePath_;
+        public string savePath
+        {
+            get
+            {
+                return savePath_;
+            }
+        }
+
+        private string resultFileName_;
+        public string resultFileName
+        {
+            get
+            {
+                return resultFileName_;
+            }
+        }
+
+        
         /** @brief relaxation time을 계산함
         */
         public double tau
@@ -87,6 +106,9 @@ namespace LBMace
             inletID = new int[4];
             size = new int[2];
             sb = new StringBuilder();
+
+            savePath_ = @"\";
+            resultFileName_ = "fluid";
         }
 
         /** @brief data의 싱글턴 생성을 위한 함수\n
@@ -290,5 +312,23 @@ namespace LBMace
 
             return output;
         }
+
+        public string getFilePath()
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    savePath_ = fbd.SelectedPath;
+
+                    return savePath_;
+                }
+            }
+
+            return null;
+        }
     }
+    
 }

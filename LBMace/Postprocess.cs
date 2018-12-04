@@ -56,11 +56,9 @@ namespace LBMace
         * @param mode 후처리 결과 파일의 확장자로 vtk와 bmp 중 하나의 값을 가진다.
         * @return 파일 경로 + 파일 이름 + 파일 확장자를 반환함
         */
-        private string nameFiles(string mode)
+        private string nameFiles(string ext)
         {
-            string output = "";
-
-            output = filepath + filename + iter + "." + mode;
+            string output = String.Format(@"{0}\{1}{2}.{3}", filepath, filename, iter, ext);
             return output;
         }
 

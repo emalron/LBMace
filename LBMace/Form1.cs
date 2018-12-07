@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
-using Timer = System.Windows.Forms.Timer;
 
 namespace LBMace
 {
@@ -28,6 +26,7 @@ namespace LBMace
             data = Data.get();
             manager = new Manager();
             updateForm(true);
+            manager.cCb = showCrit;
         }
 
         private void updateForm(bool changed)
@@ -87,20 +86,14 @@ namespace LBMace
                 // foolproof
                 button1.Enabled = true;
                 button_RUN.Enabled = true;
-                button_STOP.Enabled = true;
+                button_STOP.Enabled = false;
             }
         }
 
         private async void button_CPU_Click(object sender, EventArgs e)
         {
-            // System.Diagnostics.Process.Start(postprocess.Filepath);
             button_RUN.Enabled = false;
             button_STOP.Enabled = true;
-
-            Timer timer = new Timer();
-            timer.Tick += showCrit;
-            timer.Interval = 1000;
-            timer.Start();
 
             await Task.Run(() =>
             {
@@ -108,19 +101,22 @@ namespace LBMace
             });
         }
 
-        private void showCrit(object sender, EventArgs e)
+        delegate void addDataToChart(double r, double c);
+
+        public void showCrit(double residue, double crit)
         {
-            double residue = data.diff[0];
-            double crit = data.criteria;
+            double residue_ = residue;
+            double crit_ = crit;
 
-            string msg = String.Format("Now your residue is... {0:E4}", residue);
+            this.Invoke(new addDataToChart((double r, double c) =>
+            {
+                string msg = String.Format("Now your residue is... {0:E4}", r);
 
-            
-            
-            chart1.Series["Criteria"].Points.AddY(crit);
-            chart1.Series["Residue"].Points.AddY(residue);
+                chart1.Series["Criteria"].Points.AddY(c);
+                chart1.Series["Residue"].Points.AddY(r);
 
-            label9.Text = msg;
+                label9.Text = msg;
+            }), residue, crit);
         }
 
         private void button_Parallel_Click(object sender, EventArgs e)

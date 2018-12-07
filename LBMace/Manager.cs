@@ -13,21 +13,13 @@ namespace LBMace
         Solver solver;
         GPGPU gpu;
         Postprocess postprocess;
+        public delegate void chartCallback(double a, double b);
+        public chartCallback cCb;
         public States myState;
         Devices myDevice;
 
-        public enum States
-        {
-            IDLE,
-            READY,
-            RUN
-        }
-
-        public enum Devices
-        {
-            CPU,
-            GPU
-        }
+        public enum States {IDLE, READY, RUN}
+        public enum Devices {CPU, GPU}
 
         public Manager()
         {
@@ -35,6 +27,8 @@ namespace LBMace
             solver = new Solver();
             gpu = new GPGPU();
             postprocess = new Postprocess();
+            
+
             myState = States.IDLE;
             myDevice = Devices.CPU;
         }
@@ -162,6 +156,14 @@ namespace LBMace
             }
         }
 
+        public void showResidue()
+        {
+            double residue = data.diff[0];
+            double crit = data.criteria;
+            cCb(residue, crit);
+        }
+
+        #region Run
         public void Run()
         {
             if(myState == States.READY)
@@ -216,8 +218,9 @@ namespace LBMace
                 solver.boundary();
                 solver.macroscopic();
 
-                bool checker = data.curIterSim % 100 == 0;
+                bool checker = data.curIterSim % 50 == 0;
                 run = solver.getError(checker);
+                if(checker) { showResidue(); }
 
                 data.curIterSim++;
             }
@@ -262,10 +265,16 @@ namespace LBMace
 
                 bool checker = data.curIterSim % 50 == 0;
                 run = gpu.getError(checker);
-
+                if (checker) { showResidue(); }
                 data.curIterSim++;
             }
             post(data.optimalRun);
+        }
+        #endregion
+
+        public void Stop()
+        {
+            myState = States.READY;
         }
 
         /** @brief textBox4.text에 시뮬레이션 결과로 Inlet과 Outlet의 Pressure Difference를 출력함. */
@@ -304,11 +313,6 @@ namespace LBMace
             {
                 postprocess.saveFiles();
             }
-        }
-
-        public void Stop()
-        {
-            myState = States.READY;
         }
     }
 }

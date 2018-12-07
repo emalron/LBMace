@@ -431,17 +431,17 @@ __kernel void boundary(
         }
 
         if (map[tid] == 4) {
-            // fin[9 * tid + 2] = fin[2 + 9 * (tid + lx)];
-            // fin[9 * tid + 5] = fin[5 + 9 * (tid + lx)];
-            // fin[9 * tid + 6] = fin[6 + 9 * (tid + lx)];
+            fin[9 * tid + 2] = fin[2 + 9 * (tid + lx)];
+            fin[9 * tid + 5] = fin[5 + 9 * (tid + lx)];
+            fin[9 * tid + 6] = fin[6 + 9 * (tid + lx)];
 
-            density = 1.0;
-            ux = 0;
-            uy = 1.0 - (fin[0 + 9 * tid] + fin[1 + 9 * tid] + fin[3 + 9 * tid] + 2.0 * (fin[4 + 9 * tid] + fin[7 + 9 * tid] + fin[8 + 9 * tid])) / density;
-            
-            fin[2 + 9 * tid] = fin[4 + 9 * tid] + (2.0 / 3.0) * density * uy;
-            fin[5 + 9 * tid] = fin[7 + 9 * tid] + (fin[3 + 9 * tid] - fin[1 + 9 * tid]) / 2.0 + density * uy / 6.0;
-            fin[6 + 9 * tid] = fin[8 + 9 * tid] + (fin[1 + 9 * tid] - fin[3 + 9 * tid]) / 2.0 + density * uy / 6.0;
+            // density = 1.0;
+            // ux = 0;
+            // uy = 1.0 - (fin[0 + 9 * tid] + fin[1 + 9 * tid] + fin[3 + 9 * tid] + 2.0 * (fin[4 + 9 * tid] + fin[7 + 9 * tid] + fin[8 + 9 * tid])) / density;
+            // 
+            // fin[2 + 9 * tid] = fin[4 + 9 * tid] + (2.0 / 3.0) * density * uy;
+            // fin[5 + 9 * tid] = fin[7 + 9 * tid] + (fin[3 + 9 * tid] - fin[1 + 9 * tid]) / 2.0 + density * uy / 6.0;
+            // fin[6 + 9 * tid] = fin[8 + 9 * tid] + (fin[1 + 9 * tid] - fin[3 + 9 * tid]) / 2.0 + density * uy / 6.0;
         }
     }
 }

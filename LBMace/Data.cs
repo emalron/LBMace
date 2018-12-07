@@ -143,6 +143,41 @@ namespace LBMace
             }
         }
 
+        // GPGPU device 정보
+        public List<List<string>> devices
+        {
+            get
+            {
+                return GPGPU.getDeviceInfo();
+            }
+        }
+
+        public List<string> platforms
+        {
+            get
+            {
+                return GPGPU.getPlatformInfo();
+            }
+        }
+
+        private int myDevice_;
+        public int myDevice
+        {
+            get
+            {
+                return myDevice_;
+            }
+        }
+
+        private int myPlatform_;
+        public int myPlatform
+        {
+            get
+            {
+                return myPlatform_;
+            }
+        }
+
         // file 저장 정보
         private string savePath_;
         public string savePath
@@ -191,6 +226,12 @@ namespace LBMace
         {
             this.steadyRun_ = steady;
             this.optimalRun_ = opti;
+        }
+
+        public void setGPUDevice(int platform, int device)
+        {
+            this.myPlatform_ = platform;
+            this.myDevice_ = device;
         }
 
         private void getInletLength()
@@ -278,7 +319,7 @@ namespace LBMace
             if(ofd.FileName != "")
             {
                 tiles = new Bitmap(Image.FromFile(ofd.FileName));
-                // tiles.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                tiles.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 return true;
             }
             
@@ -439,12 +480,15 @@ namespace LBMace
             output.Add("");
 
             // GPU Devices
-            output.Add("#GPGPU device list");
-            List<string> devices = GPGPU.getDeviceInfo();
-            foreach(var device in devices)
-            {
-                output.Add(device);
-            }
+            output.Add("#Selected GPGPU Device");
+            List<string> platforms = GPGPU.getPlatformInfo();
+            List<List<string>> devices = GPGPU.getDeviceInfo();
+
+            string platform = String.Format("Platform: {0}",  platforms[myPlatform]);
+            string device = String.Format("Device: {0}", devices[myPlatform][myDevice]);
+
+            output.Add(platform);
+            output.Add(device);
 
             return output;
         }

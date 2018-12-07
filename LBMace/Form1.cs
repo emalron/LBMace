@@ -52,20 +52,27 @@ namespace LBMace
                 steadyChk.Checked = data.steadyRun;
                 optiChk.Checked = data.optimalRun;
 
-                richTextBox1.Text = "";
-                foreach (string line in data.getSimulationInfo())
-                {
-                    if (line.StartsWith("#"))
-                    {
-                        richTextBox1.SelectionColor = Color.Red;
-                    }
-                    else
-                    {
-                        richTextBox1.SelectionColor = Color.Black;
-                    }
+                ShowInfo();
 
-                    richTextBox1.AppendText(String.Format("{0}\r\n", line));
+
+            }
+        }
+
+        private void ShowInfo()
+        {
+            richTextBox1.Text = "";
+            foreach (string line in data.getSimulationInfo())
+            {
+                if (line.StartsWith("#"))
+                {
+                    richTextBox1.SelectionColor = Color.Red;
                 }
+                else
+                {
+                    richTextBox1.SelectionColor = Color.Black;
+                }
+
+                richTextBox1.AppendText(String.Format("{0}\r\n", line));
             }
         }
 
@@ -103,8 +110,15 @@ namespace LBMace
 
         private void showCrit(object sender, EventArgs e)
         {
-            double crit = data.diff[0];
-            string msg = String.Format("Now your residue is... {0:E4}", crit);
+            double residue = data.diff[0];
+            double crit = data.criteria;
+
+            string msg = String.Format("Now your residue is... {0:E4}", residue);
+
+            
+            
+            chart1.Series["Criteria"].Points.AddY(crit);
+            chart1.Series["Residue"].Points.AddY(residue);
 
             label9.Text = msg;
         }

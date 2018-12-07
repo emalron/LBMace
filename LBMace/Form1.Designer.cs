@@ -50,11 +50,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tb_Re = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.button3 = new System.Windows.Forms.Button();
@@ -68,8 +70,6 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -268,13 +268,13 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.label5);
+            this.tabPage3.Controls.Add(this.comboBox2);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.textBox1);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.comboBox1);
-            this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.radioButton2);
             this.tabPage3.Controls.Add(this.radioButton1);
             this.tabPage3.Controls.Add(this.button3);
@@ -298,6 +298,35 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "3. Simulation";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(15, 399);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(109, 15);
+            this.label11.TabIndex = 49;
+            this.label11.Text = "GPGPU Device";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(15, 370);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(117, 15);
+            this.label5.TabIndex = 48;
+            this.label5.Text = "GPGPU Platform";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.Enabled = false;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(138, 396);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(325, 23);
+            this.comboBox2.TabIndex = 47;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -328,20 +357,14 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.Enabled = false;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(138, 331);
+            this.comboBox1.Location = new System.Drawing.Point(138, 367);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 23);
+            this.comboBox1.Size = new System.Drawing.Size(325, 23);
             this.comboBox1.TabIndex = 41;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 366);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(186, 15);
-            this.label5.TabIndex = 40;
-            this.label5.Text = "the results will be saved in ";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // radioButton2
             // 
@@ -517,24 +540,6 @@
             this.chart1.TabIndex = 42;
             this.chart1.Text = "chart1";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(221, 401);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 15);
-            this.label11.TabIndex = 45;
-            this.label11.Text = "label11";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(321, 401);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(53, 15);
-            this.label12.TabIndex = 46;
-            this.label12.Text = "label12";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -592,15 +597,15 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label5;
     }
 }
 

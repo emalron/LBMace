@@ -23,10 +23,21 @@ namespace LBMace
         {
             InitializeComponent();
 
+            init();
+        }
+
+        private void init()
+        {
             data = Data.get();
             manager = new Manager();
-            updateForm(true);
             manager.cCb = showCrit;
+
+            List<string> platforms = data.platforms;
+            List<List<string>> devices = data.devices;
+            comboBox1.DataSource = platforms;
+            comboBox2.DataSource = devices[comboBox1.SelectedIndex];
+
+            updateForm(true);
         }
 
         private void updateForm(bool changed)
@@ -38,7 +49,7 @@ namespace LBMace
                 manager.setExchangeRate(numericXrate.Value);
                 manager.setSimulationMode(steadyChk.Checked, optiChk.Checked);
                 manager.setFileName(textBox2.Text);
-                manager.setDevice(radioButton1.Checked, radioButton2.Checked);
+                manager.setDevice(radioButton1.Checked, radioButton2.Checked, comboBox1.SelectedIndex, comboBox2.SelectedIndex);
                 manager.setCriteria(textBox1.Text);
 
                 // update Form Context
@@ -53,7 +64,18 @@ namespace LBMace
 
                 ShowInfo();
 
+                if(radioButton2.Checked)
+                {
+                    comboBox1.Enabled = true;
+                    comboBox2.Enabled = true;
+                }
+                else
+                {
+                    comboBox1.Enabled = false;
+                    comboBox2.Enabled = false;
+                }
 
+                
             }
         }
 
@@ -206,6 +228,16 @@ namespace LBMace
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            updateForm(true);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            updateForm(true);
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             updateForm(true);
         }

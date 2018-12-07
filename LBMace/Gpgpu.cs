@@ -110,22 +110,44 @@ namespace LBMace
         {
             data = Data.get();
 
-            ComputeContextPropertyList properties = new ComputeContextPropertyList(ComputePlatform.Platforms[0]);
-            ctx = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+            // ComputeContextPropertyList properties = new ComputeContextPropertyList(ComputePlatform.Platforms[0]);
+            // ctx = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
 
-            string deviceInfo = ComputePlatform.Platforms[0].Devices[0].Name;
+            string deviceInfo = ComputePlatform.Platforms[data.myPlatform].Devices[data.myDevice].Name;
         }
 
-        public static List<string> getDeviceInfo()
+        public static List<string> getPlatformInfo()
         {
-            List<string> output = new List<string>();
+            List<string> platforms_ = new List<string>();
 
             foreach(var platform in ComputePlatform.Platforms)
             {
-                output.Add(platform.Name);
+                platforms_.Add(platform.Name);
             }
 
-            return output;
+            return platforms_;
+        }
+
+        public static List<List<string>> getDeviceInfo()
+        {
+            List<List<string>> devices_ = new List<List<string>>();
+
+            foreach (var platform in ComputePlatform.Platforms)
+            {
+                List<string> d = new List<string>();
+
+                ComputeContextPropertyList properties = new ComputeContextPropertyList(platform);
+                ComputeContext ctx_ = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+
+                foreach (var device in ctx_.Devices)
+                {
+                    
+                    d.Add(device.Name);
+                }
+                devices_.Add(d);
+            }
+
+            return devices_;
         }
 
         /** @brief openCL을 초기화하는 메소드\n
@@ -147,7 +169,9 @@ namespace LBMace
         /** @brief GPGPU를 위해 DEVICE에 충분한 메모리 공간을 할당하고, HOST의 데이터를 GPGPU로 복사함 */
         private void declareMeta()
         {
-            cq = new ComputeCommandQueue(ctx, ctx.Devices[0], ComputeCommandQueueFlags.None);
+            ComputeContextPropertyList properties = new ComputeContextPropertyList(ComputePlatform.Platforms[data.myPlatform]);
+            ctx = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+            cq = new ComputeCommandQueue(ctx, ctx.Devices[data.myDevice], ComputeCommandQueueFlags.None);
             prog = new ComputeProgram(ctx, kernels);
             
             try
@@ -156,7 +180,7 @@ namespace LBMace
             }
             catch (Exception ex)
             {
-                string log = prog.GetBuildLog(ctx.Devices[0]);
+                string log = prog.GetBuildLog(ctx.Devices[data.myDevice]);
                 Console.Write(log);
                 throw ex;
             }

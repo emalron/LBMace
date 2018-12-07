@@ -16,7 +16,7 @@ namespace LBMace
         public delegate void chartCallback(double a, double b);
         public chartCallback cCb;
         public States myState;
-        Devices myDevice;
+        public Devices myDevice;
 
         public enum States {IDLE, READY, RUN}
         public enum Devices {CPU, GPU}
@@ -144,7 +144,7 @@ namespace LBMace
             }
         }
 
-        public void setDevice(bool cpu, bool gpu)
+        public void setDevice(bool cpu, bool gpu, int platform, int device)
         {
             if(cpu)
             {
@@ -153,6 +153,7 @@ namespace LBMace
             if (gpu)
             {
                 myDevice = Devices.GPU;
+                data.setGPUDevice(platform, device);
             }
         }
 

@@ -300,7 +300,7 @@ namespace LBMace
                         data.diff[0] = maxima;
                     }
                 }
-                if (maxima < 0.0000001d)
+                if (maxima < data.criteria)
                 {
                     data.diff[0] = maxima;
                     return false;

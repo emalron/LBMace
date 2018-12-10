@@ -41,8 +41,9 @@ namespace LBMace
         public void collision()
         {
             double eu, eusqr, usqr, feq;
+            int MAP_SIZE = data.size[0] * data.size[1];
 
-            for (int index = 0; index < data.size[0] * data.size[1]; index++)
+            for (int index = 0; index < MAP_SIZE; index++)
             {
                 if (data.map[index] != 1)
                 {
@@ -67,12 +68,12 @@ namespace LBMace
         public void streaming(double[] input, double[] output, int mode)
         {
             int ax, ay, bx, by;
-            int index, i, j;
+            int MAP_SIZE = data.size[0] * data.size[1];
 
-            for (index = 0; index < data.size[0] * data.size[1]; index++)
+            for (int index = 0; index < MAP_SIZE; index++)
             {
-                i = index % data.size[0];
-                j = index / data.size[0];
+                int i = index % data.size[0];
+                int j = index / data.size[0];
 
                 if (isWall(mode, index))
                 {
@@ -131,7 +132,9 @@ namespace LBMace
         */
         public void bounceback()
         {
-            for (int index = 0; index < data.size[0] * data.size[1]; index++)
+            int MAP_SIZE = data.size[0] * data.size[1];
+
+            for (int index = 0; index < MAP_SIZE; index++)
             {
                 if (data.map[index] == 1)
                 {
@@ -149,9 +152,9 @@ namespace LBMace
         * 이 경우 경계조건은 inlet과 outlet의 zou and he boundary condition이거나 interpolated boundary condition이다.*/
         public void boundary()
         {
-            int index;
+            int MAP_SIZE = data.size[0] * data.size[1];
 
-            for (index = 0; index < data.size[0] * data.size[1]; index++)
+            for (int index = 0; index < MAP_SIZE; index++)
             {
                 switch (data.map[index])
                 {
@@ -214,29 +217,34 @@ namespace LBMace
         * interpolated condition을 이용하여 계산함 */
         private void outletOpen(int index)
         {
-            int index9 = 9 * index;
+            int F_SIZE = 9;
+            int index9 = F_SIZE * index;
+            
 
-            data.fin[2 + index9] = data.fin[2 + 9 * (index + data.size[0] * 1)];
-            data.fin[5 + index9] = data.fin[5 + 9 * (index + data.size[0] * 1)];
-            data.fin[6 + index9] = data.fin[6 + 9 * (index + data.size[0] * 1)];
+            data.fin[2 + index9] = data.fin[2 + F_SIZE * (index + data.size[0] * 1)];
+            data.fin[5 + index9] = data.fin[5 + F_SIZE * (index + data.size[0] * 1)];
+            data.fin[6 + index9] = data.fin[6 + F_SIZE * (index + data.size[0] * 1)];
         }
 
         /** @brief distribution function의 moment를 계산하는 메소드\n
         * 이 메소드에서 density, ux, uy, strain의 값이 계산된다 */
         public void macroscopic()
         {
-            int index;
+            int MAP_SIZE, F_SIZE;
+
+            MAP_SIZE = data.size[0] * data.size[1];
+            F_SIZE = 9;
 
             double sxx, syx, sxy, syy;
             double eu, feq, usqr;
 
-            for(index = 0; index < data.size[0] * data.size[1];index++)
+            for(int index = 0; index < MAP_SIZE;index++)
             {
                 data.up[index] = data.ux[index];
                 data.vp[index] = data.uy[index];
             }
 
-            for(index = 0; index < data.size[0] * data.size[1];index++)
+            for(int index = 0; index < MAP_SIZE;index++)
             {
                 if (data.map[index] != 1)
                 {
@@ -248,26 +256,26 @@ namespace LBMace
                     sxy = 0;
                     syy = 0;
 
-                    for (int n = 0; n < 9; n++)
+                    for (int n = 0; n < F_SIZE; n++)
                     {
-                        data.density[index] += data.fin[n + 9 * index];
-                        data.ux[index] += ex[n] * data.fin[n + 9 * index];
-                        data.uy[index] += ey[n] * data.fin[n + 9 * index];
+                        data.density[index] += data.fin[n + F_SIZE * index];
+                        data.ux[index] += ex[n] * data.fin[n + F_SIZE * index];
+                        data.uy[index] += ey[n] * data.fin[n + F_SIZE * index];
                     }
 
                     data.ux[index] /= data.density[index];
                     data.uy[index] /= data.density[index];
 
                     usqr = Math.Pow(data.ux[index], 2) + Math.Pow(data.uy[index], 2);
-                    for (int n = 0; n < 9; n++)
+                    for (int n = 0; n < F_SIZE; n++)
                     {
                         eu = ex[n] * data.ux[index] + ey[n] * data.uy[index];
                         feq = weight[n] * data.density[index] * (1d + 3d * eu + 4.5d * eu * eu - 1.5d * usqr);
 
-                        sxx += ex[n] * ex[n] * (data.fin[n + 9 * index] - feq);
-                        sxy += ex[n] * ey[n] * (data.fin[n + 9 * index] - feq);
-                        syx += ey[n] * ex[n] * (data.fin[n + 9 * index] - feq);
-                        syy += ey[n] * ey[n] * (data.fin[n + 9 * index] - feq);
+                        sxx += ex[n] * ex[n] * (data.fin[n + F_SIZE * index] - feq);
+                        sxy += ex[n] * ey[n] * (data.fin[n + F_SIZE * index] - feq);
+                        syx += ey[n] * ex[n] * (data.fin[n + F_SIZE * index] - feq);
+                        syy += ey[n] * ey[n] * (data.fin[n + F_SIZE * index] - feq);
                     }
                     data.strain[index] = Math.Sqrt(Math.Pow(sxx, 2) + Math.Pow(sxy, 2) + Math.Pow(syx, 2) + Math.Pow(syy, 2));
                 }
@@ -283,12 +291,14 @@ namespace LBMace
             double umax = data.ux.Max();
             double vmax = data.uy.Max();
             double realMax = 0;
+            int MAP_SIZE = data.size[0] * data.size[1];
+
             double[] crit = new double[2];
             crit[0] = 0;
             crit[1] = 0;
 
             if (mod) {
-                for (int n = 0; n < data.size[0] * data.size[1]; n++)
+                for (int n = 0; n < MAP_SIZE; n++)
                 {
                     crit[0] = Math.Abs(data.ux[n] - data.up[n]) / umax;
                     crit[1] = Math.Abs(data.uy[n] - data.vp[n]) / vmax;
@@ -331,16 +341,17 @@ namespace LBMace
                 select index;
 
             // select fluid tiles which have at least an adjecent solid tile among the fluid tiles
-            var interfaceTiles = (
+            var interfaceTiles =
                 from index in fluidTiles
                 from n in Enumerable.Range(0, 9)
                 let j = (int)(index / data.size[0]) + (int)(ey[n])
                 let i = (int)(index % data.size[0]) + (int)(ex[n])
-                where i > 1 && (i < data.size[0]-2) && j > 1 && (j < data.size[1]-2)
+                let boundaryCheck = i > 1 && (i < data.size[0] - 2) && j > 1 && (j < data.size[1] - 2)
+                where boundaryCheck == true
                 where data.map[i + j * data.size[0]] == 1
-                select index).Distinct();
+                select index;
 
-            var result = interfaceTiles.ToDictionary(o => o, o => data.strain[o]);
+            var result = interfaceTiles.Distinct().ToDictionary(o => o, o => data.strain[o]);
 
             return result;
         }
@@ -354,25 +365,23 @@ namespace LBMace
             int num = interfaces.Count;
             int rate = (int)(num * data.xrate / 100d);
 
-            // strain 값을 기준으로 exchange rate 만큼의 타일이 변화 대상
-            var topTiles = rank.Take(rate);
-
             // 상위 strain 값을 가진 타일 주변의 wall tile을 찾음, 중복 제거 및 exchange rate 만큼 획득
-            var toFluid = (
-                from tile in topTiles
-                from n in Enumerable.Range(0, 9)
+            var toFluid =
+                from tile in rank
+                from n in Enumerable.Range(0, 4)
                 let j = (int)(tile.Key / data.size[0]) + (int)(ey[n])
                 let i = (int)(tile.Key % data.size[0]) + (int)(ex[n])
-                where i > 1 && (i < data.size[0] - 2) && j > 1 && (j < data.size[1] - 2)
+                let boundaryCheck = i > 1 && (i < data.size[0] - 2) && j > 1 && (j < data.size[1] - 2)
+                where boundaryCheck == true
                 where data.map[i + j * data.size[0]] == 1
-                select (i + j * data.size[0])).Distinct().Take(rate);
+                select new { Key = tile.Key, Value = i + j * data.size[0] };
 
-            // 맵 변화
-            foreach(var item in toFluid)
+            //맵 변화
+            foreach (var item in toFluid.Take(rate))
             {
-                data.map[item] = 0;
+                data.map[item.Value] = 0;
             }
-            
+
             // interface strain 값을 기준으로 오름차순으로 정렬함
             var revRank =
                 from tile in interfaces

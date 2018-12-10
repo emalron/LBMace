@@ -45,7 +45,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.tb_u0 = new System.Windows.Forms.TextBox();
-            this.status = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tb_Re = new System.Windows.Forms.TextBox();
@@ -193,7 +192,6 @@
             // 
             this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Controls.Add(this.tb_u0);
-            this.tabPage2.Controls.Add(this.status);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.label2);
             this.tabPage2.Controls.Add(this.tb_Re);
@@ -227,16 +225,6 @@
             this.tb_u0.TabIndex = 4;
             this.tb_u0.Text = "0.08";
             this.tb_u0.TextChanged += new System.EventHandler(this.tb_u0_TextChanged);
-            // 
-            // status
-            // 
-            this.status.Location = new System.Drawing.Point(7, 294);
-            this.status.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.status.Multiline = true;
-            this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(471, 205);
-            this.status.TabIndex = 5;
-            this.status.TabStop = false;
             // 
             // label1
             // 
@@ -589,7 +577,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
-        public System.Windows.Forms.TextBox status;
         public System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;

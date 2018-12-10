@@ -210,6 +210,7 @@ namespace LBMace
         {
             bool run = true;
             data.curIterSim = 1;
+            data.init();
 
             while (run && myState == States.RUN)
             {
@@ -219,9 +220,9 @@ namespace LBMace
                 solver.boundary();
                 solver.macroscopic();
 
-                bool checker = data.curIterSim % 50 == 0;
-                run = solver.getError(checker);
-                if(checker) { showResidue(); }
+                bool isTimeToGetResidue = data.curIterSim % 50 == 0;
+                run = solver.getError(isTimeToGetResidue);
+                if(isTimeToGetResidue) { showResidue(); }
 
                 data.curIterSim++;
             }
@@ -264,9 +265,9 @@ namespace LBMace
             {
                 gpu.run();
 
-                bool checker = data.curIterSim % 50 == 0;
-                run = gpu.getError(checker);
-                if (checker) { showResidue(); }
+                bool isTimeToGetResidue = data.curIterSim % 50 == 0;
+                run = gpu.getError(isTimeToGetResidue);
+                if (isTimeToGetResidue) { showResidue(); }
                 data.curIterSim++;
             }
             post(data.optimalRun);

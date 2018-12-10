@@ -26,6 +26,8 @@ namespace LBMace
             string filepath = data.savePath;
             string filename = data.saveFileName;
 
+            iter = data.curIterOptimal;
+
             string output = String.Format(@"{0}\{1}{2}.{3}", filepath, filename, iter, ext);
             return output;
         }
@@ -115,6 +117,7 @@ namespace LBMace
             }
 
             string name = nameFiles("bmp");
+            buffer.RotateFlip(RotateFlipType.RotateNoneFlipY);
             buffer.Save(name, System.Drawing.Imaging.ImageFormat.Bmp);
         }
     }

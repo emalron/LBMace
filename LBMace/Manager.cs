@@ -27,7 +27,6 @@ namespace LBMace
             solver = new Solver();
             gpu = new GPGPU();
             postprocess = new Postprocess();
-            
 
             myState = States.IDLE;
             myDevice = Devices.CPU;
@@ -99,10 +98,13 @@ namespace LBMace
 
         public void setFluidInfo(string Re, string u0)
         {
-            double Re_ = Convert.ToDouble(Re);
-            double u0_ = Convert.ToDouble(u0);
+            if(Re != String.Empty && u0 != String.Empty)
+            {
+                double Re_ = Convert.ToDouble(Re);
+                double u0_ = Convert.ToDouble(u0);
 
-            data.setFluidInfo(Re_, u0_);
+                data.setFluidInfo(Re_, u0_);
+            }
         }
 
         public void setIteration(decimal iter)

@@ -16,14 +16,12 @@ namespace LBMace
 
     public partial class Form1 : Form
     {
-        Data data;
-        Manager manager;
+        private Data data;
+        private Manager manager;
 
         public Form1()
         {
             InitializeComponent();
-
-            init();
         }
 
         private void init()
@@ -33,8 +31,21 @@ namespace LBMace
             manager.cCb = showCrit;
 
             // Data bindings
-            tb_Re.DataBindings.Add("Text", data, "Re");
-            tb_u0.DataBindings.Add("Text", data, "u0");
+            //Binding b1 = new Binding("Text", data, "Re", true);
+            //b1.Parse += new ConvertEventHandler((o, e) => {
+            //    if (e.DesiredType != typeof(string)) return;
+            //    e.Value = e.Value.ToString();
+            //});
+
+            tb_Re.DataBindings.Add("Text", data, "Re", true);
+            // tb_Re.DataBindings.Add(b1);
+            tb_u0.DataBindings.Add("Text", data, "u0", true);
+            label3.DataBindings.Add("Text", data, "savePath");
+
+            steadyChk.DataBindings.Add("Checked", data, "steadyRun");
+            optiChk.DataBindings.Add("Checked", data, "optimalRun");
+
+            textBox1.DataBindings.Add("Text", data, "criteria", true);
 
             List<string> platforms = data.platforms;
             List<string> devices = data.devices;
@@ -44,10 +55,26 @@ namespace LBMace
             updateForm(true);
         }
 
+        public void convert(object o, ConvertEventArgs c)
+        {
+            if (c.DesiredType != typeof(string)) return;
+
+            c.Value = c.Value.ToString();
+        }
+
         private void updateForm(bool changed)
         {
             if (changed)
             {
+                // update Form Context
+                foreach(Control c in this.Controls)
+                {
+                    foreach(Binding b in c.DataBindings)
+                    {
+                        b.ReadValue();
+                    }
+                }
+
                 manager.setFluidInfo(tb_Re.Text, tb_u0.Text);
                 manager.setIteration(numericIter.Value);
                 manager.setExchangeRate(numericXrate.Value);
@@ -55,20 +82,19 @@ namespace LBMace
                 manager.setFileName(textBox2.Text);
                 manager.setDevice(radioButton1.Checked, radioButton2.Checked, comboBox1.SelectedIndex, comboBox2.SelectedIndex);
                 manager.setCriteria(textBox1.Text);
-
-                // update Form Context
-                label3.Text = data.savePath;
+                
+                //label3.Text = data.savePath;
                 string plain1 = "file name, ex)";
                 string filename = textBox2.Text;
                 string ext = "_0.vtx";
                 string text_ = String.Format("{0} {1}{2}", plain1, filename, ext);
                 label7.Text = text_;
-                steadyChk.Checked = data.steadyRun;
-                optiChk.Checked = data.optimalRun;
+                //steadyChk.Checked = data.steadyRun;
+                //optiChk.Checked = data.optimalRun;
 
                 ShowInfo();
 
-                if(radioButton2.Checked)
+                if (radioButton2.Checked)
                 {
                     comboBox1.Enabled = true;
                     comboBox2.Enabled = true;
@@ -79,7 +105,7 @@ namespace LBMace
                     comboBox2.Enabled = false;
                 }
 
-                
+
             }
         }
 
@@ -244,6 +270,11 @@ namespace LBMace
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             updateForm(true);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            init();
         }
     }
 }

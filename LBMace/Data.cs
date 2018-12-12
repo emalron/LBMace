@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace LBMace
 {
-    class Data
+    public class Data
     {
         // singleton...
         private static Data data;
@@ -29,6 +29,7 @@ namespace LBMace
             sb = new StringBuilder();
 
             Re_ = 20d;
+            u0_ = 0.1d;
 
             savePath_ = System.Environment.CurrentDirectory;
             saveFileName_ = "fluid";
@@ -47,7 +48,18 @@ namespace LBMace
         // 수렴도 계산에 사용됨
         public double[] diff;
         public double[] up, vp;
-        public double criteria;
+        private double criteria_;
+        public double criteria
+        {
+            get
+            {
+                return criteria_;
+            }
+            set
+            {
+                criteria_ = value;
+            }
+        }
 
         // heuristic criteria: strain rate tensor, dynamic pressure
         public double[] strain, dynamic;
@@ -71,6 +83,14 @@ namespace LBMace
                 return u0_;
             }
         }
+
+        public string REE
+        {
+            get
+            {
+                return "!";
+            }
+        }
         public double Re
         {
             get
@@ -78,6 +98,7 @@ namespace LBMace
                 return Re_;
             }
         }
+
         public double xrate
         {
             get
@@ -464,7 +485,7 @@ namespace LBMace
             string optimal = String.Format("Optimization mode: {0}", this.optimalRun_.ToString());
             string iteration = String.Format("Iternation: {0}", this.iteration_.ToString());
             string exRate = String.Format("Exchange rate: {0}", this.xrate_.ToString());
-            string crit = String.Format("Residue Criteria: {0}", this.criteria.ToString());
+            string crit = String.Format("Residue Criteria: {0}", this.criteria_.ToString());
 
             output.Add(steady);
             output.Add(optimal);

@@ -32,10 +32,14 @@ namespace LBMace
             manager = new Manager();
             manager.cCb = showCrit;
 
+            // Data bindings
+            tb_Re.DataBindings.Add("Text", data, "Re");
+            tb_u0.DataBindings.Add("Text", data, "u0");
+
             List<string> platforms = data.platforms;
-            List<List<string>> devices = data.devices;
-            comboBox1.DataSource = platforms;
-            comboBox2.DataSource = devices[comboBox1.SelectedIndex];
+            List<string> devices = data.devices;
+            comboBox1.DataBindings.Add("DataSource", data, "platforms");
+            comboBox2.DataBindings.Add("DataSource", data, "devices");
 
             updateForm(true);
         }

@@ -28,6 +28,8 @@ namespace LBMace
             size = new int[2];
             sb = new StringBuilder();
 
+            Re_ = 20d;
+
             savePath_ = System.Environment.CurrentDirectory;
             saveFileName_ = "fluid";
         }
@@ -144,11 +146,11 @@ namespace LBMace
         }
 
         // GPGPU device 정보
-        public List<List<string>> devices
+        public List<string> devices
         {
             get
             {
-                return GPGPU.getDeviceInfo();
+                return GPGPU.getDeviceInfo(myPlatform_);
             }
         }
 
@@ -482,10 +484,10 @@ namespace LBMace
             // GPU Devices
             output.Add("#Selected GPGPU Device");
             List<string> platforms = GPGPU.getPlatformInfo();
-            List<List<string>> devices = GPGPU.getDeviceInfo();
+            List<string> devices = GPGPU.getDeviceInfo(myPlatform_);
 
-            string platform = String.Format("Platform: {0}",  platforms[myPlatform]);
-            string device = String.Format("Device: {0}", devices[myPlatform][myDevice]);
+            string platform = String.Format("Platform: {0}",  platforms[myPlatform_]);
+            string device = String.Format("Device: {0}", devices[myDevice_]);
 
             output.Add(platform);
             output.Add(device);

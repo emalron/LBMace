@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LBMace
 {
@@ -52,6 +53,165 @@ namespace LBMace
             }
 
             return false;
+        }
+
+        // Bitmap으로부터 map 데이터를 읽음
+        public bool mapping()
+        {
+            Bitmap tiles_ = new Bitmap(10, 10);
+
+            if (loadFile(ref tiles_))
+            {
+                size = sizing(tiles_);
+                map = getColor(tiles_);
+                inletID = counterColor();
+
+                init();
+                return true;
+            }
+            return false;
+        }
+
+        private bool loadFile(ref Bitmap tiles)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.DefaultExt = ".bmp";
+            ofd.Filter = "Map file (.bmp)|*.bmp";
+
+            ofd.ShowDialog();
+
+            if (ofd.FileName != "")
+            {
+                tiles = new Bitmap(Image.FromFile(ofd.FileName));
+                tiles.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                return true;
+            }
+
+            return false;
+        }
+
+        private int[] sizing(Bitmap tiles)
+        {
+            int[] lengs_ = new int[2];
+
+            lengs_[0] = tiles.Width;
+            lengs_[1] = tiles.Height;
+
+            return lengs_;
+
+        }
+
+
+        /** @brief 로딩한 Bitmap의 색상정보로부터 각 lattice의 type을 구분함\n
+        * White(0): Fluid, \n
+        * Black(1): Wall, \n
+        * Red(2): Inlet(left), \n
+        * Blue(3): Inlet(Right), \n
+        * Green(4): Outlet\n
+        * @return 2D simulation domain의 lattice 정보
+        */
+        private int[] getColor(Bitmap tiles)
+        {
+            List<int> result_ = new List<int>();
+
+            var output_ =
+                from j in Enumerable.Range(0, tiles.Height)
+                from i in Enumerable.Range(0, tiles.Width)
+                select tiles.GetPixel(i, j);
+        
+            foreach (var tile in output_)
+            {
+                if (tile == Color.FromArgb(255, 255, 255, 255))
+                {
+                    result_.Add(0);
+                }
+                else if (tile == Color.FromArgb(255, 0, 0, 0))
+                {
+                    result_.Add(1);
+                }
+                else if (tile == Color.FromArgb(255, 255, 0, 0))
+                {
+                    result_.Add(2);
+                }
+                else if (tile == Color.FromArgb(255, 0, 0, 255))
+                {
+                    result_.Add(3);
+                }
+                else
+                {
+                    result_.Add(4);
+                }
+            }
+
+            return result_.ToArray();
+        }
+
+        /** @brief inletID 계산을 위한 색상정보 검색
+        * @return inletID에 저장될 값
+        */
+        private int[] counterColor(int[] map)
+        {
+            //int[] output = new int[4];
+            //int cntRed, cntBlue;
+
+            //cntRed = 0;
+            //cntBlue = 0;
+
+            //for (int index = 0; index < size[0] * size[1]; index++)
+            //{
+            //    if (map[index] == 2)
+            //    {
+            //        if (cntRed == 0)
+            //        {
+            //            output[0] = index;
+            //        }
+            //        output[1] = index;
+            //        cntRed++;
+            //    }
+            //    if (map[index] == 3)
+            //    {
+            //        if (cntBlue == 0)
+            //        {
+            //            output[2] = index;
+            //        }
+            //        output[3] = index;
+            //        cntBlue++;
+            //    }
+            //}
+
+            int[] map_ = map;
+            int size_ = map_.Length;
+            int[] output_;
+
+            var temp_ =
+                from i in Enumerable.Range(0, size_)
+                let v = map_[i]
+                group i by v into colors
+                select colors;
+
+            var inletReds = getArrayFromGroup(temp_, 2);
+            var inletBlues = getArrayFromGroup(temp_, 3);
+            var outlets = getArrayFromGroup(temp_, 4);
+
+            output_ = new int[4] { inletReds.Min(), inletReds.Max(), inletBlues.Min(), inletBlues.Max() };
+
+            return output_;
+        }
+
+        List<int> getArrayFromGroup(object groups, int key)
+        {
+            List<int> output_ = new List<int>();
+            var groups_ = groups as IEnumerable<IGrouping<int, int>>;
+
+            var temp_ =
+                from g in groups_
+                where g.Key == 2
+                from e in g
+                select e;
+
+            output_ = temp_.ToList<int>();
+
+            return output_;
         }
 
         /** @brief Form1에 로드한 Geometry 정보를 출력하는 메소드\n

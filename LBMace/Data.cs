@@ -128,7 +128,6 @@ namespace LBMace
 
         // Solver 동작 모드
         private bool steadyRun_, optimalRun_;
-
         public bool steadyRun
         {
             get
@@ -136,7 +135,6 @@ namespace LBMace
                 return steadyRun_;
             }
         }
-
         public bool optimalRun
         {
             get
@@ -153,7 +151,6 @@ namespace LBMace
                 return GPGPU.getDeviceInfo(myPlatform_);
             }
         }
-
         public List<string> platforms
         {
             get
@@ -162,7 +159,7 @@ namespace LBMace
             }
         }
 
-        private int myDevice_;
+        private int myDevice_, myPlatform_;
         public int myDevice
         {
             get
@@ -170,8 +167,6 @@ namespace LBMace
                 return myDevice_;
             }
         }
-
-        private int myPlatform_;
         public int myPlatform
         {
             get
@@ -181,7 +176,7 @@ namespace LBMace
         }
 
         // file 저장 정보
-        private string savePath_;
+        private string savePath_, saveFileName_;
         public string savePath
         {
             get
@@ -189,8 +184,6 @@ namespace LBMace
                 return savePath_;
             }
         }
-
-        private string saveFileName_;
         public string saveFileName
         {
             get
@@ -198,7 +191,6 @@ namespace LBMace
                 return saveFileName_;
             }
         }
-
         public string resultFileName
         {
             get

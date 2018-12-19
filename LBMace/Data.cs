@@ -28,6 +28,8 @@ namespace LBMace
             size = new int[2];
             sb = new StringBuilder();
 
+            Re_ = 20d;
+
             savePath_ = System.Environment.CurrentDirectory;
             saveFileName_ = "fluid";
         }
@@ -126,7 +128,6 @@ namespace LBMace
 
         // Solver 동작 모드
         private bool steadyRun_, optimalRun_;
-
         public bool steadyRun
         {
             get
@@ -134,7 +135,6 @@ namespace LBMace
                 return steadyRun_;
             }
         }
-
         public bool optimalRun
         {
             get
@@ -144,14 +144,13 @@ namespace LBMace
         }
 
         // GPGPU device 정보
-        public List<List<string>> devices
+        public List<string> devices
         {
             get
             {
-                return GPGPU.getDeviceInfo();
+                return GPGPU.getDeviceInfo(myPlatform_);
             }
         }
-
         public List<string> platforms
         {
             get
@@ -160,7 +159,7 @@ namespace LBMace
             }
         }
 
-        private int myDevice_;
+        private int myDevice_, myPlatform_;
         public int myDevice
         {
             get
@@ -168,8 +167,6 @@ namespace LBMace
                 return myDevice_;
             }
         }
-
-        private int myPlatform_;
         public int myPlatform
         {
             get
@@ -179,7 +176,7 @@ namespace LBMace
         }
 
         // file 저장 정보
-        private string savePath_;
+        private string savePath_, saveFileName_;
         public string savePath
         {
             get
@@ -187,8 +184,6 @@ namespace LBMace
                 return savePath_;
             }
         }
-
-        private string saveFileName_;
         public string saveFileName
         {
             get
@@ -196,7 +191,6 @@ namespace LBMace
                 return saveFileName_;
             }
         }
-
         public string resultFileName
         {
             get
@@ -482,10 +476,10 @@ namespace LBMace
             // GPU Devices
             output.Add("#Selected GPGPU Device");
             List<string> platforms = GPGPU.getPlatformInfo();
-            List<List<string>> devices = GPGPU.getDeviceInfo();
+            List<string> devices = GPGPU.getDeviceInfo(myPlatform_);
 
-            string platform = String.Format("Platform: {0}",  platforms[myPlatform]);
-            string device = String.Format("Device: {0}", devices[myPlatform][myDevice]);
+            string platform = String.Format("Platform: {0}",  platforms[myPlatform_]);
+            string device = String.Format("Device: {0}", devices[myDevice_]);
 
             output.Add(platform);
             output.Add(device);

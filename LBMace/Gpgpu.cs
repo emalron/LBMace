@@ -128,23 +128,19 @@ namespace LBMace
             return platforms_;
         }
 
-        public static List<List<string>> getDeviceInfo()
+        public static List<string> getDeviceInfo(int platform)
         {
-            List<List<string>> devices_ = new List<List<string>>();
+            List<string> devices_ = new List<string>();
 
-            foreach (var platform in ComputePlatform.Platforms)
+            var platform_ = ComputePlatform.Platforms[platform];
+
+            ComputeContextPropertyList properties = new ComputeContextPropertyList(platform_);
+            ComputeContext ctx_ = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
+
+            foreach (var device in ctx_.Devices)
             {
-                List<string> d = new List<string>();
-
-                ComputeContextPropertyList properties = new ComputeContextPropertyList(platform);
-                ComputeContext ctx_ = new ComputeContext(ComputeDeviceTypes.Gpu, properties, null, IntPtr.Zero);
-
-                foreach (var device in ctx_.Devices)
-                {
                     
-                    d.Add(device.Name);
-                }
-                devices_.Add(d);
+                devices_.Add(device.Name);
             }
 
             return devices_;
